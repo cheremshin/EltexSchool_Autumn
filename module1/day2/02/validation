@@ -1,0 +1,51 @@
+#!/bin/bash
+
+source ./usage
+
+
+function validateArguments() {
+    checkOnHelp $@
+    checkArgumentsCount $@
+
+    # Path must exist
+    checkPath $1
+
+    # Count of folders/files must be a positive number
+    checkOnPositiveNumber $2
+    checkOnPositiveNumber $3
+    checkOnPositiveNumber $4
+}
+
+function checkOnHelp() {
+    case $1 in
+        -h|--help)
+            help
+            exit 0
+            ;;
+    esac
+}
+
+function checkArgumentsCount() {
+    if [ $# -ne 7 ]; then
+        usage
+        exit 1
+    fi
+}
+
+function checkPath() {
+    local path=$1
+
+    if [ ! -d $path ]; then
+        echo "$path does not exist or is not a directory"
+        echo "Try main.sh --help for more information"
+        exit 1
+    fi
+}
+
+function checkOnPositiveNumber() {
+    if [ $1 -le 0 ]; then
+        echo "Count of folders/files must be a positive number"
+        echo "Try main.sh --help for more information"
+        exit 1
+    fi
+}

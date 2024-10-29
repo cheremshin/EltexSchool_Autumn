@@ -1,0 +1,52 @@
+#!/bin/bash
+
+
+root_checked=1
+
+function checkAndRestartProcess() {
+    while true; do
+        if ! isProcessRunning; then
+            echo "Process '$process_name' is dead. Restarting..."
+            restartProcess
+        else
+            echo "Process '$process_name' is in work"
+        fi
+
+        sleep $timeout
+    done
+}
+
+#
+# Check $process_name on present in 'ps aux' output
+# For clear check we need to avoid "grep" process and process of this script
+#
+function isProcessRunning() {
+    local count=$(ps aux | grep -v grep | grep -v "${script_name}" | grep -w "$process_name" | wc -l)
+
+    if [ $count -le 0 ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+function restartProcess() {
+    # Try start process and get information about root privileges needed
+    if [ $has_sudo -ne 0 ] && [ !$root_checked ]; then
+        echo "[INFO] Testing process on root privileges via restart"
+        testRoot
+    fi
+
+    nohup $process_name > /dev/null 2>&1 &
+    echo "${process_name} - Successfully restarted"
+}
+
+function testRoot() {
+    $process_name 2>/dev/null 1>&2
+
+    local exit_code=$?
+    if [ $exit_code -eq 100 ]; then
+        echo "[ERROR] root privileges needed to start '$process_name'"
+        exit 1
+    fi
+}

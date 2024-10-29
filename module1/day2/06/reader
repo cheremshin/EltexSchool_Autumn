@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+function readParameters() {
+    read -p "Enter source directory: " source_dir
+    read -p "Enter destination directory: " destination_dir
+    read -p "Enter archive name: " archive_name
+    read -p "Enter backup period (daily, weekly, monthly) or leave empty for immediate backup: " period
+
+    if [ -n "$period" ]; then
+        read -p "Enter backup time in format (HH:MM) or leave empty for default time: " time
+    fi
+}

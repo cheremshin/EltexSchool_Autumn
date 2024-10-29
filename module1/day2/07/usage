@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+function usage() {
+    echo "Usage: main.sh 'input_file' 'output_file'"
+    echo "Try 'main.sh --help' for more information."
+}
+
+function help() {
+    echo "Usage: main.sh main.sh 'input_file' 'output_file'"
+    echo "Description: The script transliterates text from 'input_file' to 'output_file'"
+    echo "Example: ./main.sh some_text.txt result.txt"
+    echo
+    echo "Script options:"
+    echo "   -i, --input_file=FILE      file to read from"
+    echo "   -o, --output_file=FILE     file to write to"
+    echo
+    echo "Miscellaneous:"
+    echo "   -h, --help                 display this help text and exit"
+}

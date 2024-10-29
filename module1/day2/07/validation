@@ -1,0 +1,95 @@
+#!/bin/bash
+
+source ./usage
+
+
+function validateArguments() {
+    while [ -n "$1" ]; do
+        case "$1" in
+            -h|--help)
+                help
+                exit 0
+                ;;
+            -i)
+                shift
+                handleInputFile "$1"
+                ;;
+            --input-file=*)
+                handleInputFile $(extractValue "$1")
+                ;;
+            -o)
+                shift
+                handleOutputFile "$1"
+                ;;
+            --output-file=*)
+                handleOutputFile $(extractValue "$1")
+                ;;
+            *)
+                handleUnknownArgument "$1"
+                ;;
+        esac
+        shift
+    done
+
+    handleSkippedArguments
+}
+
+function extractValue() {
+    local given_value=$1
+    echo "${given_value#*=}"
+}
+
+
+function handleInputFile() {
+    if [ "$input_file" != "" ]; then
+        local argument_name="Input file"
+        handleAlreadyGivenArgument "$argument_name" "$input_file" "$1"
+    fi
+
+    input_file=$1
+}
+
+function handleOutputFile() {
+    if [ "$output_file" != "" ]; then
+        local argument_name="Output file"
+        handleAlreadyGivenArgument "$argument_name" "$output_file" "$1"
+    fi
+
+    output_file=$1
+}
+
+
+function handleUnknownArgument() {
+    local arg1=$1
+    
+    if ! [ "$input_file" = "" ]; then
+        handleOutputFile "$arg1"
+    else
+        handleInputFile "$arg1"
+    fi
+}
+
+function handleAlreadyGivenArgument() {
+    local argument_name="$1"
+    local already_set_value="$2"
+    local argument_value="$3"
+
+    echo "[WARNING] $argument_name already set. Updating."
+    echo "Previous value='$already_set_value'. New one value='$argument_value'"
+    echo "Try 'main.sh --help' for more information."
+    echo
+}
+
+function handleSkippedArguments() {
+    if [ "$input_file" = "" ]; then
+        echo '[ERROR] You must pass input file.'
+        echo "Try 'main.sh --help' for more information."
+        exit 1
+    fi
+
+    if [ "$output_file" = "" ]; then
+        echo '[ERROR] You must pass name of output file.'
+        echo "Try 'main.sh --help' for more information."
+        exit 1
+    fi
+}

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+function usage() {
+    echo "Usage: main.sh OPTIONS"
+    echo "Try 'main.sh --help' for more information."
+}
+
+function help() {
+    echo "There no optional arguments"
+    echo "Script options:"
+    echo "[PATH] - The path to folder where script executes"
+    echo "[FOLDERS_COUNT] - The number of folders"
+    echo "[SUBFOLDERS_COUNT] - The number of subfolders in each created folder"
+    echo "[FILES_COUNT] - The number of files in each created subfolder"
+    echo "[FOLDERS_NAME] - Starting name of folders. Always ends with _n (for example: folder_1, folder_2, folder_3)"
+    echo "[SUBFOLDERS_NAME] - As a FOLDERS_NAME"
+    echo "[FILES_NAME] - As a FOLDERS_NAME"
+}

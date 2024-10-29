@@ -1,0 +1,41 @@
+#!/bin/bash
+
+
+function readConfig() {
+    local config_file=$1
+
+    if [ -f $config_file ]; then
+        while IFS="=" read -r key value; do
+            if [ -n "$key" ]; then
+                case "$key" in
+                    "process_name")
+                        process_name=$value
+                        ;;
+                    "since")
+                        since=$value
+                        ;;
+                    "until")
+                        until=$value
+                        ;;
+                    *)
+                        echo "Unknown option '$key'"
+                        exit 1
+                        ;;
+                esac
+            fi
+        done < "$config_file"
+    else
+        echo "Config file '$config_file' does not exist"
+        exit 1;
+    fi
+
+    handleSkippedArguments
+}
+
+function handleSkippedArguments() {
+    if [ "$process_name" = "" ]; then
+        echo '[ERROR] You must pass process name to be searched for.'
+        echo "Try 'main.sh --help' for more information."
+        exit 1
+    fi
+}

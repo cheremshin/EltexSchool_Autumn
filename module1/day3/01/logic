@@ -1,0 +1,12 @@
+#!/bin/bash
+
+
+function setAlarm() {
+    local sleep_duration=$(($time - $(date +%s)))
+    echo "Alarm set for $formatted_time. Waiting for $sleep_duration seconds."
+    sleep $sleep_duration
+
+    echo "[INFO] Ringing alarm!"
+    echo "Press CTRL+C to stop."
+    mplayer $filename 1>/dev/null 2>/dev/null
+}

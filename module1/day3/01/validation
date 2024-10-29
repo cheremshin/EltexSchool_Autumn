@@ -1,0 +1,86 @@
+#!/bin/bash
+
+source ../common/validation.sh
+
+function validateArguments() {
+    while [ -n "$1" ]; do
+        case "$1" in
+            -f)
+                shift
+                handleFilename "$1"
+                ;;
+            --filename=*)
+                handleFilename $(extractValue "$1")
+                ;;
+            -t)
+                shift
+                handleTime "$1"
+                ;;
+            --time=*)
+                handleTime $(extractValue "$1")
+                ;;
+            *)
+                handleUnknownArgument "$1"
+                ;;
+        esac
+        shift
+    done
+
+    handleSkippedArguments
+}
+
+function handleFilename() {
+     if [ "$filename" != "" ]; then
+        local argument_name="Filename"
+        handleAlreadyGivenArgument "$argument_name" "$filename" "$1"
+    fi
+
+    if [[ ! -f "$1" ]]; then
+        echo "[ERROR] File '$1' does not exist."
+        exit 1
+    fi
+
+    filename=$1
+}
+
+function handleTime() {
+    if [ "$time" != "" ]; then
+        local argument_name="Time"
+        handleAlreadyGivenArgument "$argument_name" "$time" "$1"
+    fi
+
+    local current_time=$(date +%s)
+    local alarm_time=$(date -d "$1" +%s)
+
+    if [ "$alarm_time" -le "$current_time" ]; then
+        echo "[ERROR] Time '$1' is in the past."
+        exit 1
+    fi
+
+    time=$alarm_time
+    formatted_time=$1
+}
+
+function handleUnknownArgument() {
+    local arg=$1
+
+    if [ "$filename" == "" ]; then
+        handleFilename "$arg"
+    else
+        handleTime "$arg"
+    fi
+}
+
+function handleSkippedArguments() {
+    if [ "$filename" == "" ]; then
+        echo "[ERROR] Filename argument is required."
+        echo "Try 'main.sh --help' for more information."
+        exit 1
+    fi
+
+    if [ "$time" == "" ]; then
+        echo "[ERROR] Time argument is required."
+        echo "Try 'main.sh --help' for more information."
+        exit 1
+    fi
+}

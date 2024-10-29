@@ -1,0 +1,100 @@
+#!/bin/bsah
+
+source ./usage
+
+
+function validateArguments() {
+    while [ -n "$1" ]; do
+        case "$1" in
+            -h|--help)
+                help
+                exit 0
+                ;;
+            -e)
+                shift
+                handleProcessName "$1"
+                ;;
+            --process-name=*)
+                handleProcessName $(extractValue "$1")
+                ;;
+            -S)
+                shift
+                handleSince "$1"
+                ;;
+            --since=*)
+                handleSince $(extractValue "$1")
+                ;;
+            -U)
+                shift
+                handleUntil "$1"
+                ;;
+            --until=*)
+                handleUntil $(extractValue "$1")
+                ;;
+            *)
+                handleUnknownArgument "$1"
+                ;;
+        esac
+        shift
+    done
+
+    handleSkippedArguments
+}
+
+function extractValue() {
+    local given_value=$1
+    echo "${given_value#*=}"
+}
+
+function handleProcessName() {
+    if [ "$process_name" != "" ]; then
+        local argument_name="Process name"
+        handleAlreadyGivenArgument "$argument_name" "$process_name" "$1"
+    fi
+
+    process_name=$1
+}
+
+function handleSince() {
+    if [ "$since" != "" ]; then
+        local argument_name="Since"
+        handleAlreadyGivenArgument "$argument_name" "$since" "$1"
+    fi
+
+    since=$1
+}
+
+function handleUntil() {
+    if [ "$until" != "" ]; then
+        local argument_name="Until"
+        handleAlreadyGivenArgument "$argument_name" "$until" "$1"
+    fi
+
+    until=$1
+}
+
+function handleUnknownArgument() {
+    local arg=$1
+
+    handleProcessName "$arg"
+}
+
+
+function handleAlreadyGivenArgument() {
+    local argument_name="$1"
+    local already_set_value="$2"
+    local argument_value="$3"
+
+    echo "[WARNING] $argument_name already set. Updating."
+    echo "Previous value='$already_set_value'. New one value='$argument_value'"
+    echo "Try 'main.sh --help' for more information."
+    echo
+}
+
+function handleSkippedArguments() {
+    if [ "$process_name" = "" ]; then
+        echo '[ERROR] You must pass process name to be searched for.'
+        echo "Try 'main.sh --help' for more information."
+        exit 1
+    fi
+}

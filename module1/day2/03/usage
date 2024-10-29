@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+function usage() {
+    echo "Usage: main.sh PROCESS_NAME [OPTIONS]..."
+    echo "Try 'main.sh --help' for more information."
+}
+
+function help() {
+    echo "Usage: main.sh PROCESS_NAME [OPTIONS]..."
+    echo "Description: The script starts monitoring the provided process and tries to restart it if it stops for any reason with the specified timeout"
+    echo "You must pass PROCESS_NAME value as it is main logic value, but it can be given by option"
+    echo "Example: ./main.sh 'python3 program.py' 300"
+    echo
+    echo "Script options:"
+    echo "   -e, --process-name=VALUE   the name of process (command to start it)"
+    echo "   -t, --time=NUM             timeout between process alive check (given in seconds)"
+    echo "                              default value is 5 minutes"
+    echo
+    echo "Miscellaneous:"
+    echo "   -d, --daemon               run script as daemon in background. Suppress messages"
+    echo "   -h, --help                 display this help text and exit"
+}

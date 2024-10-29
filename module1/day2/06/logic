@@ -1,0 +1,41 @@
+#!/bin/bash
+
+
+function createBackup() {
+    if [ -n "$period" ]; then
+        scheduleBackup
+    else
+        immediateBackup
+    fi
+}
+
+function immediateBackup() {
+    tar -czf "${destination_dir}/${archive_name}" -C "${source_dir}" .
+    echo "Backup created at ${destination_dir}/${archive_name}"
+}
+
+function scheduleBackup() {
+    local cron_command="tar -czf ${destination_dir}/${archive_name} -C ${source_dir} ."
+    local cron_time=""
+
+    if [ -n "$time" ]; then
+        local hour=$(echo "$time" | cut -d ':' -f 1)
+        local minute=$(echo "$time" | cut -d ':' -f 2)
+        cron_time="${minute} ${hour}"
+    fi
+
+    case "$period" in
+        daily)
+            cron_time="${cron_time} * * *"
+            ;;
+        weekly)
+            cron_time="${cron_time} * * 0"
+            ;;
+        monthly)
+            cron_time="${cron_time} 1 * *"
+            ;;
+    esac
+
+    (crontab -l ; echo "${cron_time} ${cron_command}") | crontab -
+    echo "Backup scheduled with cron: ${cron_time} ${cron_command}"
+}

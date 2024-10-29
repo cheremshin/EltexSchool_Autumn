@@ -1,0 +1,22 @@
+#!/bin/bash
+
+
+function usage() {
+    echo "Usage: main.sh PROCESS_NAME [OPTIONS]..."
+    echo "Try 'main.sh --help' for more information."
+}
+
+function help() {
+    echo "Usage: main.sh PROCESS_NAME [OPTIONS]..."
+    echo "Description: The script displays logs of given process in given time period"
+    echo "You must pass PROCESS_NAME value as it is main logic value, but it can be given by option"
+    echo "Example: ./main.sh postgresql.service"
+    echo
+    echo "Script options:"
+    echo "   -e, --process-name=VALUE   the name of process"
+    echo "   -S, --since=DATE           show entries not older than the specified date"
+    echo "   -U, --until=DATE           show entries not newer than the specified date"
+    echo
+    echo "Miscellaneous:"
+    echo "   -h, --help                 display this help text and exit"
+}

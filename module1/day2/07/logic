@@ -1,0 +1,32 @@
+#!/bin/bash
+
+
+function translateFile() {
+    declare -A transliteration_map=(
+        ["A"]="А" ["B"]="Б" ["C"]="Ц" ["D"]="Д" ["E"]="Е" ["F"]="Ф" ["G"]="Г"
+        ["H"]="Х" ["I"]="И" ["J"]="Й" ["K"]="К" ["L"]="Л" ["M"]="М" ["N"]="Н"
+        ["O"]="О" ["P"]="П" ["Q"]="К" ["R"]="Р" ["S"]="С" ["T"]="Т" ["U"]="У"
+        ["V"]="В" ["W"]="В" ["X"]="Х" ["Y"]="У" ["Z"]="З"
+        ["a"]="а" ["b"]="б" ["c"]="ц" ["d"]="д" ["e"]="е" ["f"]="ф" ["g"]="г"
+        ["h"]="х" ["i"]="и" ["j"]="й" ["k"]="к" ["l"]="л" ["m"]="м" ["n"]="н"
+        ["o"]="о" ["p"]="п" ["q"]="к" ["r"]="р" ["s"]="с" ["t"]="т" ["u"]="у"
+        ["v"]="в" ["w"]="в" ["x"]="х" ["y"]="у" ["z"]="з"
+    )
+
+    local output=""
+
+    while IFS= read -r line; do
+        for (( i=0; i<${#line}; i++ )); do
+            char="${line:$i:1}"
+            if [[ -n "${transliteration_map[$char]}" ]]; then
+                output+="${transliteration_map[$char]}"
+            else
+                output+="$char"
+            fi
+        done
+        output+=$'\n'
+    done < "$input_file"
+
+    echo "$output" > "$output_file"
+    echo "Transliteration completed. Output saved to $output_file"
+}

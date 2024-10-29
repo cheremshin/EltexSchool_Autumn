@@ -1,0 +1,22 @@
+#!/bin/bash
+
+
+function createFoldersAndFiles() {
+    for (( i=0; i<$folders_count; i++ )); do
+        folder_name="${folders_name}_${i}"
+        folder_path="${path}/${folder_name}"
+        mkdir -p "${folder_path}"
+
+        for (( j=1; j<=$subfolders_count; j++ )); do
+            subfolder_name="${subfolders_name}_${j}"
+            subfolder_path="${folder_path}/${subfolder_name}"
+            mkdir -p "${subfolder_path}"
+
+            for (( k=1; k<=$files_count; k++ )); do
+                file_name="${files_name}_${k}"
+                file_path="${subfolder_path}/${file_name}"
+                touch "${file_path}"
+            done
+        done
+    done
+}

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+function help() {
+    echo "Usage: main.sh"
+    echo "Description: The script displays logs of given process in given time period"
+    echo "Script parameters must be set in 'script.conf' file"
+    echo "Example:"
+    echo "script_name=postgresql.service"
+    echo "since=2021-01-01 00:00:00"
+    echo "until=2021-01-02 00:00:00"
+    echo ""
+    echo "'since' and 'until' values are optional"
+    echo "[IMPORTANT]: last line of script must be empty"
+}
