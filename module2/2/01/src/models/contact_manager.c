@@ -101,6 +101,7 @@ int contact_manager_remove(ContactManager *self, int id) {
     return status;
 }
 
+
 void contact_manager_init(ContactManager *manager) {
     if (manager == NULL) {
         return;
